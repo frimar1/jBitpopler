@@ -2,7 +2,7 @@
 /**
  * @name        Java Applikation für diverse Bitoperationen
  * @package     none
- * @file        Main.java
+ * @file        JBitpopler.java
  * @author      Frickler-Fritz
  * @email       -
  * @link        https://github.com/Frickler-Fritz/jBitpopler
@@ -22,7 +22,7 @@ public class JBitpopler {
 	public static void main(String[] args) {
 	      try {
 	          UI uiPop = new UI();
-	          //uiPop.init();
+	          uiPop.init();
 	       }
 	       catch (Exception e) {
 	          System.out.println(e.getMessage());   
