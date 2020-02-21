@@ -1,7 +1,7 @@
 
 /**
  * @name        Java Applikation für diverse Bitoperationen
- * @package     none
+ * @package     jbitpopler
  * @file        JBitpopler.java
  * @author      Frickler-Fritz
  * @email       -
