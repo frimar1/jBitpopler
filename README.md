@@ -1,7 +1,7 @@
 # jBitpopler    "Java Applikation für diverse Bitoperationen"
 
-Sprache/Language:
-  - German/Deutsch
+Language / Sprache:
+  - German / Deutsch
 
 Funktionen:
   - Bietet zwei 32-bit Speicherregister (Akku) die jeweils mit einem Wert (hex,dez,bin) gefüllt werden können. 
