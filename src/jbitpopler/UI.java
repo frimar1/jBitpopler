@@ -28,8 +28,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import javafx.scene.layout.Border;
-
 
 public class UI {
 
@@ -43,23 +41,31 @@ public class UI {
     private final JPanel panelResu;
     
     
-	/** AKKU-1 Panel + Elements */
-	private final JPanel 	panel_A1, panel_R1, panel_A1_oben, panel_A1_mitte, panel_A1_unten, 
-							panel_A1_unten_word, panel_A1_unten_byte;
+	/** AKKU-1 Panel and its elements */
+	private JPanel 			panel_A1, panel_R1;
+	private JButton			btn_a1_clr, btn_a1_inv;
+
 	
-	private final JButton	btn_a1_clr, btn_a1_inv;
-	private final JLabel	lbl_a1_hex, lbl_a1_dez, lbl_a1_okt, lbl_a1_bin,
-							lbl_a1_db3,lbl_a1_db2,lbl_a1_db1,lbl_a1_db0,
-							lbl_a1_dw1,lbl_a1_dw0;
+	/** AKKU 2 Panel and its elements */
+	private JPanel 			panel_A2, panel_R2;
+	private JButton			btn_a2_clr, btn_a2_inv;
 
-	/** AKKU-2 Panel + Elements */
 
-	private final JPanel	panel_A2, panel_R2;
-	private final JButton	btn_a2_clr, btn_a2_inv;
-	private final JLabel	lbl_a2_hex, lbl_a2_dez, lbl_a2_okt, lbl_a2_bin,
-							lbl_a2_db3,lbl_a2_db2,lbl_a2_db1,lbl_a2_db0,
-							lbl_a2_dw1,lbl_a2_dw0;
+	/** RESULT Panel and its elements (used AKKU panel) */
+	private JPanel 			panel_A3;
+	
 
+	/** used for creating a pseudo-Akku widget */
+	final int  AKKU_LABELS = 10;
+	final int  AKKU_PANELS = 5;
+	
+	private Akkudata akku1, akku2, akku3;
+	private JLabel[] akku1label = new JLabel[AKKU_LABELS];	
+	private JPanel[] akku1panel = new JPanel[AKKU_PANELS];
+	private JLabel[] akku2label = new JLabel[AKKU_LABELS];
+	private JPanel[] akku2panel = new JPanel[AKKU_PANELS];
+	private JLabel[] akku3label = new JLabel[AKKU_LABELS];
+	private JPanel[] akku3panel = new JPanel[AKKU_PANELS];
 	
 	
 	public UI() throws IOException {
@@ -72,49 +78,99 @@ public class UI {
       	panelAkku = new JPanel(new FlowLayout());
       	panelRota = new JPanel(new FlowLayout());
       	panelResu = new JPanel(new FlowLayout());
-	      	
-	      	/** AKKU-1 Panel + Elements */
-	      	panel_A1 = new JPanel(new BorderLayout());
-	      	panel_R1 = new JPanel(new FlowLayout());
-	      	panel_A1_oben = new JPanel(new FlowLayout());
-	      	panel_A1_mitte = new JPanel(new FlowLayout());
-	      	panel_A1_unten = new JPanel(new FlowLayout());	      	
-	      	panel_A1_unten_byte = new JPanel(new FlowLayout());
-	      	panel_A1_unten_word = new JPanel(new FlowLayout());
-	      	
-	      	lbl_a1_hex = new JLabel();
-	      	lbl_a1_dez = new JLabel();
-	      	lbl_a1_okt = new JLabel();
-	      	lbl_a1_bin = new JLabel();
-	      	lbl_a1_db3 = new JLabel();
-	      	lbl_a1_db2 = new JLabel();
-	      	lbl_a1_db1 = new JLabel();
-	      	lbl_a1_db0 = new JLabel();
-	      	lbl_a1_dw1 = new JLabel();
-	      	lbl_a1_dw0 = new JLabel();
+
+      	/** initialisation of AKKU-1 */
+      		panel_R1 = new JPanel(new FlowLayout());
 	      	btn_a1_clr = new JButton();
 	      	btn_a1_inv = new JButton();
 
-	      	/** AKKU-2 Panel + Elements */
-	      	panel_A2 = new JPanel(new FlowLayout());
+      /** initialisation of AKKU-2 */
 	      	panel_R2 = new JPanel(new FlowLayout());
-	      	lbl_a2_hex = new JLabel();
-	      	lbl_a2_dez = new JLabel();
-	      	lbl_a2_okt = new JLabel();
-	      	lbl_a2_bin = new JLabel();
-	      	lbl_a2_db3 = new JLabel();
-	      	lbl_a2_db2 = new JLabel();
-	      	lbl_a2_db1 = new JLabel();
-	      	lbl_a2_db0 = new JLabel();
-	      	lbl_a2_dw1 = new JLabel();
-	      	lbl_a2_dw0 = new JLabel();
 	      	btn_a2_clr = new JButton();
 	      	btn_a2_inv = new JButton();
-	      
+
+	      	
+	/** COMMON initialisation of AKKU 1-3 */      	
+	      	for (int i=0; i<AKKU_LABELS; i++) {
+	      		akku1label[i] = new JLabel();
+	      		akku2label[i] = new JLabel();
+	      		akku3label[i] = new JLabel();
+	      	}
+	      	
+	      	for (int i=0; i<AKKU_PANELS; i++) {
+	      		akku1panel[i] = new JPanel(new FlowLayout());
+	      		akku2panel[i] = new JPanel(new FlowLayout());
+	      		akku3panel[i] = new JPanel(new FlowLayout());
+	      	}
+
 	}
 
+	
+	public JPanel widgetAkku(JLabel[] akkuLabels, JPanel[] akkuPanels,  Akkudata akku) {
+
+		/**
+		 *  Expected order of list "JLabels":
+		 *  =================================
+		 *  Jlabel[] = lbl_hex, lbl_dez, lbl_okt, lbl_bin, lbl_db3, lbl_db2, lbl_db1, lbl_db0, lbl_dw1, lbl_dw0 ;
+		 *  
+		 *  Expected order of list "JPanels":
+		 *  =================================      	
+		 *  Jpanel[] = panel_oben, panel_mitte, panel_unten, panel_unten_byte, panel_unten_word ;
+		 *  
+		 *  
+		 */
+		
+		/* Default decoration for type JPanel */
+		JPanel tmpPanel = new JPanel();
+		tmpPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		/* Default decoration for type JPanel */
+		JLabel tmpLabel = new JLabel();
+		tmpLabel.setBorder(BorderFactory.createLineBorder(Color.lightGray));
+		
+		
+	  JPanel myPanel1 = new JPanel(new BorderLayout());
+	  myPanel1.setBorder(tmpPanel.getBorder());
+      
+	  for (int i=0; i<akkuLabels.length;i++) {
+		  akkuLabels[i].setText(String.valueOf(akku.getAkkudata()[i]));
+		  akkuLabels[i].setBorder(tmpLabel.getBorder());
+	  }
+
+	  
+      // panel_oben
+	  akkuPanels[0].setBorder(tmpLabel.getBorder());
+	  akkuPanels[0].add(akkuLabels[0]);
+	  akkuPanels[0].add(akkuLabels[1]);
+	  akkuPanels[0].add(akkuLabels[2]);
+      myPanel1.add(akkuPanels[0], BorderLayout.NORTH);
+      
+      // panel_mitte	      
+      akkuPanels[1].add(akkuLabels[3]);
+      myPanel1.add(akkuPanels[1],BorderLayout.CENTER);
+      
+      // panel_unten_byte
+      akkuPanels[3].add(akkuLabels[4]);
+      akkuPanels[3].add(akkuLabels[5]);	
+      akkuPanels[3].add(akkuLabels[6]);
+      akkuPanels[3].add(akkuLabels[7]);
+      
+
+      // panel_unten_word
+      akkuPanels[4].add(akkuLabels[8]);
+      akkuPanels[4].add(akkuLabels[9]);
+      
+
+      // panel_unten
+      akkuPanels[2].setBorder(tmpLabel.getBorder());
+      akkuPanels[2].add(akkuPanels[3]);
+      akkuPanels[2].add(akkuPanels[4]);
+      myPanel1.add(akkuPanels[2], BorderLayout.SOUTH);
+
+      return myPanel1;
+}
+	
 	public void init() {
-	      frame.setSize(400, 600);
+	      frame.setSize(500, 400);
 	      frame.setVisible(true);
 	      frame.setLocationRelativeTo(null); 
 	      frame.setResizable(false);
@@ -127,64 +183,33 @@ public class UI {
 	      
 	      
 	      /** AKKU-1 Panel + Elements */
-	      panel_A1.setBorder(BorderFactory.createLineBorder(Color.black));
-	      panel_R1.setBorder(BorderFactory.createLineBorder(Color.gray));
-	      lbl_a1_hex.setText("hex");
-	      lbl_a1_dez.setText("dez");
-	      lbl_a1_okt.setText("okt");
-	      lbl_a1_bin.setText("bin");
-	      lbl_a1_db3.setText("db3");
-	      lbl_a1_db2.setText("db2");
-	      lbl_a1_db1.setText("db1");
-	      lbl_a1_db0.setText("db0");
-	      lbl_a1_dw1.setText("dw1");
-	      lbl_a1_dw0.setText("dw0");
-	        
-	      // oben
-	      panel_A1_oben.add(lbl_a1_hex);
-	      panel_A1_oben.add(lbl_a1_dez);
-	      panel_A1_oben.add(lbl_a1_okt);
-	      panel_A1.add(panel_A1_oben, BorderLayout.NORTH);
-	      
-	      //mitte	      
-	      panel_A1_mitte.add(lbl_a1_bin);
-	      panel_A1.add(panel_A1_mitte,BorderLayout.CENTER);
-	      
-	      //unten
-	      panel_A1_unten_byte.add(lbl_a1_db3);
-	      panel_A1_unten_byte.add(lbl_a1_db2);	
-	      panel_A1_unten_byte.add(lbl_a1_db1);
-	      panel_A1_unten_byte.add(lbl_a1_db0);
-       
-	      panel_A1_unten_word.add(lbl_a1_dw1);
-	      panel_A1_unten_word.add(lbl_a1_dw0);
-	      
-	      panel_A1_unten.add(panel_A1_unten_byte);
-	      panel_A1_unten.add(panel_A1_unten_word);
-	      panel_A1.add(panel_A1_unten, BorderLayout.SOUTH);
-	      
-	      
+	      akku1= Akkudata.createData();
+	      akku1.setAkkudata(101,AKKU_LABELS);	      
+	      panel_A1=widgetAkku(akku1label, akku1panel, akku1);
 	      panelAkku.add(panel_A1);
-	      panelRota.add(panel_R1);
+
 	      
 	      /** AKKU-2 Panel + Elements */
-	      panel_A2.setBorder(BorderFactory.createLineBorder(Color.black));
-	      panel_R2.setBorder(BorderFactory.createLineBorder(Color.gray));
-	      lbl_a2_hex.setText("hex");
-	      lbl_a2_dez.setText("dez");
-	      lbl_a2_okt.setText("okt");
-	      panel_A2.add(lbl_a2_hex);
-	      panel_A2.add(lbl_a2_dez);
-	      panel_A2.add(lbl_a2_okt);
+	      akku2 = Akkudata.createData();
+	      akku2.setAkkudata(121,AKKU_LABELS);
+	      panel_A2=widgetAkku(akku2label, akku2panel, akku2);
 	      panelAkku.add(panel_A2);
-	      
-	      
+	      	      
 
-	      /** Arrange MAIN sub panels */
-	      
-	      
-	      
+	      /** ROTA 1 + 2 Panel */
+	      panel_R1.setBorder(BorderFactory.createLineBorder(Color.gray));
+	      panelRota.add(panel_R1);	  
+	      panel_R2.setBorder(BorderFactory.createLineBorder(Color.gray));
 	      panelRota.add(panel_R2);
+
+	      
+	      /** RESU Panel */
+	      akku3 = Akkudata.createData();
+	      akku3.setAkkudata(131,AKKU_LABELS);
+	      panel_A3=widgetAkku(akku3label, akku3panel, akku3);
+	      panelResu.add(panel_A3);
+
+	      /** Arrange MAIN sub panels */	      
 	      panel.add(panelAkku);
 	      panel.add(panelRota);
 	      panel.add(panelResu);
