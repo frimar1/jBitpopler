@@ -1,5 +1,5 @@
 /**
- * @name        Java Applikation für diverse Bitoperationen
+ * @name        Java Applikation fï¿½r diverse Bitoperationen
  * @package     jbitpopler
  * @file        UI.java
  * @author      Frickler-Fritz
@@ -18,7 +18,9 @@ package jbitpopler;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
@@ -58,14 +60,18 @@ public class UI {
 	/** used for creating a pseudo-Akku widget */
 	final int  AKKU_LABELS = 10;
 	final int  AKKU_PANELS = 5;
+	final int  AKKU_BUTTONS = 3;
 	
 	private Akkudata akku1, akku2, akku3;
-	private JLabel[] akku1label = new JLabel[AKKU_LABELS];	
-	private JPanel[] akku1panel = new JPanel[AKKU_PANELS];
+	private JLabel[]  akku1label  = new JLabel[AKKU_LABELS];	
+	private JPanel[]  akku1panel  = new JPanel[AKKU_PANELS];
+	private JButton[] akku1button = new JButton[AKKU_BUTTONS];
 	private JLabel[] akku2label = new JLabel[AKKU_LABELS];
 	private JPanel[] akku2panel = new JPanel[AKKU_PANELS];
+	private JButton[] akku2button = new JButton[AKKU_BUTTONS];
 	private JLabel[] akku3label = new JLabel[AKKU_LABELS];
 	private JPanel[] akku3panel = new JPanel[AKKU_PANELS];
+	private JButton[] akku3button = new JButton[AKKU_BUTTONS];
 	
 	
 	public UI() throws IOException {
@@ -102,11 +108,18 @@ public class UI {
 	      		akku2panel[i] = new JPanel(new FlowLayout());
 	      		akku3panel[i] = new JPanel(new FlowLayout());
 	      	}
+	      	
+	      	for (int i=0; i<AKKU_BUTTONS; i++) {
+	      		akku1button[i] = new JButton();
+	      		akku2button[i] = new JButton();
+	      		akku3button[i] = new JButton();	      		
+	      	}
 
+	      	
 	}
 
 	
-	public JPanel widgetAkku(JLabel[] akkuLabels, JPanel[] akkuPanels,  Akkudata akku) {
+	public JPanel widgetAkku(JLabel[] akkuLabels, JPanel[] akkuPanels,  JButton[] akkuButtons, Akkudata akku) {
 
 		/**
 		 *  Expected order of list "JLabels":
@@ -117,6 +130,9 @@ public class UI {
 		 *  =================================      	
 		 *  Jpanel[] = panel_oben, panel_mitte, panel_unten, panel_unten_byte, panel_unten_word ;
 		 *  
+		 *  Expected order of list "JButtons":
+		 *  =================================
+		 *  Jbutton[] = clear, invert, revert ;
 		 *  
 		 */
 		
@@ -147,6 +163,30 @@ public class UI {
       // panel_mitte	      
       akkuPanels[1].add(akkuLabels[3]);
       myPanel1.add(akkuPanels[1],BorderLayout.CENTER);
+      
+      // panel links      
+      JPanel BtnPanel = new JPanel();
+      BtnPanel.setLayout(new BoxLayout(BtnPanel, BoxLayout.Y_AXIS));
+      
+      int wid=45;
+      int hei=25;
+      for (int i=0; i<akkuButtons.length;i++) {
+    	  akkuButtons[i].setPreferredSize(new Dimension(wid, hei));  
+    	  akkuButtons[i].setFont(new Font("Courier", Font.PLAIN, 10));
+    	
+      }
+      
+      akkuButtons[0].setText("c");
+      akkuButtons[0].setToolTipText("clear value");
+      akkuButtons[1].setText("i");
+      akkuButtons[1].setToolTipText("invert bits");
+      akkuButtons[2].setText("r");
+      akkuButtons[2].setToolTipText("revert bits");
+      
+      BtnPanel.add(akkuButtons[0]);     
+      BtnPanel.add(akkuButtons[1]);      
+      BtnPanel.add(akkuButtons[2]);      
+      myPanel1.add(BtnPanel,BorderLayout.WEST);
       
       // panel_unten_byte
       akkuPanels[3].add(akkuLabels[4]);
@@ -185,14 +225,14 @@ public class UI {
 	      /** AKKU-1 Panel + Elements */
 	      akku1= Akkudata.createData();
 	      akku1.setAkkudata(101,AKKU_LABELS);	      
-	      panel_A1=widgetAkku(akku1label, akku1panel, akku1);
+	      panel_A1=widgetAkku(akku1label, akku1panel, akku1button, akku1);
 	      panelAkku.add(panel_A1);
 
 	      
 	      /** AKKU-2 Panel + Elements */
 	      akku2 = Akkudata.createData();
 	      akku2.setAkkudata(121,AKKU_LABELS);
-	      panel_A2=widgetAkku(akku2label, akku2panel, akku2);
+	      panel_A2=widgetAkku(akku2label, akku2panel, akku2button, akku2);
 	      panelAkku.add(panel_A2);
 	      	      
 
@@ -206,7 +246,7 @@ public class UI {
 	      /** RESU Panel */
 	      akku3 = Akkudata.createData();
 	      akku3.setAkkudata(131,AKKU_LABELS);
-	      panel_A3=widgetAkku(akku3label, akku3panel, akku3);
+	      panel_A3=widgetAkku(akku3label, akku3panel, akku3button,  akku3);
 	      panelResu.add(panel_A3);
 
 	      /** Arrange MAIN sub panels */	      
