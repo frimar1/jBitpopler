@@ -1,5 +1,9 @@
 # jBitpopler    "Java Applikation für diverse Bitoperationen"
 
+
+# PoC - State
+Anwendung derzeit nicht in Weiterentwicklung
+
 Language / Sprache:
   - German / Deutsch
 
